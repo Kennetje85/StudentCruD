@@ -4,6 +4,7 @@ using ReactCrud.Models;
 using Microsoft.EntityFrameworkCore;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 
+
 namespace ReactCrud.Controllers
 {
     [Route("api/[controller]")]
@@ -43,6 +44,27 @@ namespace ReactCrud.Controllers
             _studentDbContext.Entry(objStudent).State = EntityState.Modified;
             await _studentDbContext.SaveChangesAsync();
             return objStudent;
+
+        }
+
+        [HttpGet]
+        [Route("FindStudent/{stname}")]
+        public async Task<IEnumerable<Student>> FindStudent(string stname,Student objstudent)
+        {
+            
+            var student = _studentDbContext.Student.Find(stname);
+            if (student != null)
+            {
+
+                var find = await _studentDbContext.Student.ToListAsync();
+                find.Add(objstudent);
+
+            }
+            else
+            {
+
+            }
+            return Enumerable.Empty<Student>();
 
         }
 

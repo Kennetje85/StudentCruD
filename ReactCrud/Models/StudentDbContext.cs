@@ -9,6 +9,7 @@ namespace ReactCrud.Models
         {
         }
         public DbSet<Student> Student { get; set; }
+        public DbSet<Project> Project { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
