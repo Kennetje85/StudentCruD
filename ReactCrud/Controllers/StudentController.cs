@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using ReactCrud.Models;
 using Microsoft.EntityFrameworkCore;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace ReactCrud.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentController : ControllerBase
+    public class StudentController : ControllerBase, StudentRepository
     {
         private readonly StudentDbContext _studentDbContext;
 
@@ -26,7 +26,7 @@ namespace ReactCrud.Controllers
             return await _studentDbContext.Student.ToListAsync();
         }
 
-
+  
         [HttpPost]
         [Route("AddStudent")]
         public async Task<Student> AddStudent(Student ObjStudent)
@@ -48,23 +48,15 @@ namespace ReactCrud.Controllers
         }
 
         [HttpGet]
-        [Route("FindStudent/{stname}")]
-        public async Task<IEnumerable<Student>> FindStudent(string stname,Student objstudent)
+        [Route("FindStudent/{Stname}")]
+        public async Task<IEnumerable<Student>> FindStudent(string Stname)
         {
-            
-            var student = _studentDbContext.Student.Find(stname);
-            if (student != null)
+            IQueryable<Student> query = _studentDbContext.Student;
+            if (!string.IsNullOrEmpty(Stname))
             {
-
-                var find = await _studentDbContext.Student.ToListAsync();
-                find.Add(objstudent);
-
+                query = query.Where(a => a.stname.Contains(Stname));
             }
-            else
-            {
-
-            }
-            return Enumerable.Empty<Student>();
+            return query.ToList();
 
         }
 
